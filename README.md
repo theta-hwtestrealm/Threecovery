@@ -1,4 +1,4 @@
-# Threecovery
+# Threecovery ☀️
 Apple has had a bad habit for more than a decade, locking devic3s to their original owners without permission or knowledge. When one receives another’s old device, its more often than not locked without any of the two parties knowledge.
 
 - Jump to the bottom for the reason this exists
@@ -7,7 +7,7 @@ Apple has had a bad habit for more than a decade, locking devic3s to their origi
 
 - The device cannot be reset. All information is scrubbed, and i haven't found any unobfuscated data
 
-- This tool is also a good way to see usage statistics and other unique information
+- This tool is also a good way to see usage statistics and other very unique information that would take you hours to collect otherwise
 
 - Use this at your own peril, at your own demise! ⛈️ <sub>(Please only use if you're confident in your usage and its permissibility)</sub>
 
@@ -73,6 +73,9 @@ __armv7 devices (Disabled+Infinite Attempt) (iOS 9-10):__ [Legacy iOS Kit instea
 __Any device where you already have infinite passcode attempts:__ [look at this convenient tool designed to assist you](https://github.com/theta-hwtestrealm/pwd-and-teleprompter)
 
 __9.0-9.3.6, 64 bit:__ Likely this kind of tool is impossible and there isn't any other public information, which is unfortunate due to Activation Error. You cannot download from SSH
+
+## Bugs
+- "All"
   
 ## This project is meant to demonstrate numerous subjects, but it mostly refers to unreset BFU devices
 ### Myself and others feel like dodging activation lock is like stepping through a minefield. This is a small documentation about the phenomenon. Also, lot of the quotes below are personal observations, but it must be noted, that Apple and Android devote mass effort keeping device owners anonymous unless they choose not to be (Medical ID, Lost Mode contact, Wallpaper, Etc). 
@@ -109,5 +112,5 @@ iDevices with this feature enabled, will cease to work, showing a message that t
 - MDM is much more complex, and something regular users wont see. However, it is extremely damaging at a large scale.
 - John Bumstead [published a detailed video](https://youtu.be/uGgR4srMwLQ) which contained most of the key differences
 - MDM comes after Activation Lock, if your device isn't activation locked you can often bypass it and retain all iCloud functionality`^`
-### So, what are *my* feelings on Apple?
-I still like Apple, and I love their solutions (especially pre-Cook). Some of these problems are extremely hard to work through whether you accept that or not, however, I am disappointed. For over a decade Apple has pushed a sub-par policy or at the very least a policy with not enough exceptions, which they've only made more integral, and it's only gotten worse over time device by device amendment by amendment. Beyond this, they used quite unreasonable methods to seemingly hide this. Also, whether Apple likes it or not, a hacky-fix had to come for their problem. Threecovery is just that.
+### So, what are *my* feelings on Apple? *Note, subject to change*
+I still like Apple, and I love their solutions (especially pre-Cook). Some of these problems are extremely hard to work through whether you accept that or not, however, I feel disappointed. For over a decade Apple has pushed a sub-par policy or at the very least a policy with not enough exceptions, which they've only made more integral, and it's only gotten worse over time device by device amendment by amendment. Beyond this, they used quite unreasonable methods to seemingly hide this issue. Also, whether Apple likes it or not, a hacky-fix had to come for their problem. Threecovery is just that. 
