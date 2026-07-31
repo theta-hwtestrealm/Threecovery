@@ -55,7 +55,7 @@ __A7 (iPhone 5s, iPad Air, iPad Mini 2/3) iOS 11.0-12.5.8:__ Boot an SSH Ramdisk
 
 __A8, A9, A10, A11, iOS 10.3-15.8.8__: SSHRD_Script (Or its forks, such as iPh0ne4s SSHRD_Script), then `./recover.sh -s 2222 ./OUTPUT.txt`
 
-__A10x, A11, iOS 16.0-18.7.9:__ No recommended tools yet, but it should definitely be possible
+__A9x, A10x, A11, iOS 16.0-18.7.9:__ No recommended tools yet, but it should definitely be possible
 
 __A12/A13:__ No recommended tools yet, but it should definitely be possible
 
@@ -66,13 +66,13 @@ __A7/A8, iOS 7.0-8.4.1:__ iPh0ne4s SSHRD_Script `--bruteforce` command (it also 
 
 __armv6/armv7 devices (Disabled+Infinite Attempt) iOS 1.0-8.4.1:__ download `/mnt2/mobile/Library/Preferences/com.apple.springboard.plist` in Legacy iOS Kit SSH Ramdisk, set failed attempts to `-9999` and reupload it. You can also __fully delete and remove__ other SBDeviceLockedBlocked values to remove disabled.
 
-__armv7 devices:__ you'd better use this (but if you have a 6 digit device, you may use iwannabrute)
+__armv7 devices:__ [you'd better use this](https://github.com/tuanemss/32bit-Bruteforce-Passcode/releases) (but if you have a 6 digit device, you may use [iwannabrute](https://github.com/platinumstufff/iwannabrute))
 
 __armv7 devices (Disabled+Infinite Attempt) (iOS 9-10):__ [Legacy iOS Kit instead of Sliver, use XPlist instead of plist edit pro, i use FileZilla instead of cyberduck](https://youtube.com/watch?v=DT_NlKdSCHw)
   
 __Any device where you already have infinite passcode attempts:__ [look at this convenient tool designed to assist you](https://github.com/theta-hwtestrealm/pwd-and-teleprompter)
 
-__9.0-9.3.6, 64 bit:__ Likely this kind of tool is impossible and there isn't any public workaround, which is unfortunate due to the activation issue. You cannot download from SSH
+__9.0-9.3.6, 64 bit:__ Likely this kind of tool is impossible and there isn't any other public information, which is unfortunate due to Activation Error. You cannot download from SSH
   
 ## This project is meant to demonstrate numerous subjects, but it mostly refers to unreset BFU devices
 ### Myself and others feel like dodging activation lock is like stepping through a minefield. This is a small documentation about the phenomenon. Also, lot of the quotes below are personal observations, but it must be noted, that Apple and Android devote mass effort keeping device owners anonymous unless they choose not to be (Medical ID, Lost Mode contact, Wallpaper, Etc). 
@@ -109,5 +109,5 @@ iDevices with this feature enabled, will cease to work, showing a message that t
 - MDM is much more complex, and something regular users wont see. However, it is extremely damaging at a large scale.
 - John Bumstead [published a detailed video](https://youtu.be/uGgR4srMwLQ) which contained most of the key differences
 - MDM comes after Activation Lock, if your device isn't activation locked you can often bypass it and retain all iCloud functionality`^`
-### So, what are *my* feelings on apple?
+### So, what are *my* feelings on Apple?
 I don't dislike apple, and i love their solutions (especially pre-Cook). Some of these problems are extremely hard to work through whether you accept that or not, however, I am disappointed with apple. For over a decade they've pushed a sub-par policy or at the very least a policy with not enough exceptions, that they've only made more integral, that's only gotten worse over time device by device amendment by amendment. Beyond this, they used quite unreasonable methods to seemingly hide his. Also, whether apple likes it or not, a hacky-fix had to come for their problem. Threecovery is just that.
