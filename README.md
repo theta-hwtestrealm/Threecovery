@@ -11,9 +11,12 @@ Apple has had a bad habit for more than a decade, locking devic3s to their origi
 
 - Use this at your own peril, at your own demise! ⛈️ <sub>(Please only use if you're confident in your usage and its permissibility)</sub>
 
+## How this works:
+  On vulnerable devices, you can [boot SSH Ramdisks](https://theapplewiki.com/wiki/SSH_Ramdisk) and download ["Class D" files](https://support.apple.com/guide/security/data-protection-classes-secb010e978a/web). This includes metadata, which can still contain valuable information you might not expect. However, processing this data is also a challenge. The files come in proprietary formats and its hard to sort through valuable and worthless data.
+
 ## Usage Guide
 - Threecovery only works on MacOS silicon and MacOS x86 right now. Linux support will come and perhaps Windows support too (ONLY x86 is planned for these)
-- Threecovery targets any iOS device, provided you can mount filesystems and download from `/mnt2`
+- Threecovery targets any iOS device, provided you can mount filesystems and download unprotected files from `/mnt2`
 - It must be noted that this tool is in desperate need of testing, and is focusing on iOS 10.3-15.8.8
 
 ### You must start by booting an SSH Ramdisk and mounting filesystems. Start by reading *"A Cheat-sheet of tools to use with Threecovery"*
@@ -121,3 +124,5 @@ iDevices with this feature enabled, will cease to work, showing a message that t
 - MDM comes after Activation Lock, if your device isn't activation locked you can often bypass it and retain all iCloud functionality`^`
 ### So, what are *my* feelings on Apple? *Note, subject to change*
 I still like Apple, and I love their solutions (especially pre-Cook). Some of these problems are extremely hard to work through whether you accept that or not, however, I feel disappointed. For over a decade Apple has pushed a sub-par policy or at the very least a policy with not enough exceptions, which they've only made more integral, and it's only gotten worse over time device by device amendment by amendment. Beyond this, they used quite unreasonable methods to seemingly hide this issue. Also, whether Apple likes it or not, a hacky-fix had to come for their problem. Threecovery is just that. 
+
+Final notes, some point out you can often find an email or number in plaintext if you know where to look. This is a good strategy, but there is other, unexpected and valuable data hidden too! I sour on people in Jailbreak communities who police data recovery discussion (or owners of paid tools) hiding this simple in practice information from those who need it.
