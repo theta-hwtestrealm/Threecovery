@@ -47,6 +47,8 @@ Apple has had a bad habit for more than a decade, locking devic3s to their origi
 
   supported formats:  .json, .plist, .txt
 
+  if you see __zsh: permission denied__ or a similar error, run `chmod +x ./recovery.sh`
+
 ## A Cheat-sheet of tools to use with Threecovery
 
 __10.0-10.3.3, 64 bit:__ This is a very mixed bag, getting an SSH Ramdisk to work can be challenging and i wasn't able to on A7. Provided you can download from /mnt2 without crashing, Threecovery supports it.
@@ -75,6 +77,11 @@ __Any device where you already have infinite passcode attempts:__ [look at this 
 __9.0-9.3.6, 64 bit:__ Likely this kind of tool is impossible and there isn't any other public information, which is unfortunate due to Activation Error. You cannot download from SSH
 
 ## Bugs
+- Initial release
+- Cellular-related data is not implemented due to only testing on a handful of devices
+- a LOT should be added to the formatting tools, its still very empty
+- code is also very messy, i was a little rushed in the end
+- SSH not tested
 - "All"
   
 ## This project is meant to demonstrate numerous subjects, but it mostly refers to unreset BFU devices
