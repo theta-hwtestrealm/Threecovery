@@ -121,6 +121,7 @@ ssh_download() { # $1 = port $2 = "-f/-d" checktype $3 = filepath $4 = output
 }
 
 ssh_download_all() {
+    error "Do not use the below code of this function until it is fixed"
     if [ "$specs_system" = 'Linux' ]; then #SSHRD_Script
         sudo systemctl stop usbmuxd > /dev/null 2>&1 | true
         sudo killall usbmuxd > /dev/null 2>&1 | true
