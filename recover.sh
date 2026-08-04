@@ -114,7 +114,7 @@ send_out() {
 
 ssh_download() { # $1 = port $2 = "-f/-d" checktype $3 = filepath $4 = output
     if execute "sshpass" -p $PASSWORD ssh root@127.0.0.1 -p$1 -o StrictHostKeyChecking=no "test $2 $3"; then
-        execute "sshpass" -p $PASSWORD scp -p root@127.0.0.1 -p$1 -r -o StrictHostKeyChecking=no "root@127.0.0.1:$3" $4 || true;
+        execute "sshpass" -p $PASSWORD scp -p -P$1 -r -o StrictHostKeyChecking=no "root@127.0.0.1:$3" "$4" || true;
     else
         warn "File $3 doesnt exist"
     fi
@@ -122,6 +122,7 @@ ssh_download() { # $1 = port $2 = "-f/-d" checktype $3 = filepath $4 = output
 
 ssh_download_all() {
     error "Do not use the below code of this function until it is fixed"
+    echo "${color_R}Dont touch the device${color_N}...   "
     if [ "$specs_system" = 'Linux' ]; then #SSHRD_Script
         sudo systemctl stop usbmuxd > /dev/null 2>&1 | true
         sudo killall usbmuxd > /dev/null 2>&1 | true
@@ -130,16 +131,18 @@ ssh_download_all() {
         sleep .1
     fi
     execute "iproxy" "$2" 22 > /dev/null 2>&1 &
+    execute "sshpass" -p alpine ssh root@127.0.0.1 -p2222 -o StrictHostKeyChecking=no "/usr/bin/mount_filesystems || true"
     ssh_download "$2" "-f" "/mnt2/mobile/Library/Preferences/com.apple.springboard.plist" "$1"
-    ssh_download "$2" "-d" "/mnt2/mobile/Library/Accounts/Accounts3.sqlite" "$1"
+    ssh_download "$2" "-f" "/mnt2/mobile/Library/Accounts/Accounts3.sqlite" "$1"
     ssh_download "$2" "-d" "/mnt2/mobile/Library/TCC" "$1"
-    ssh_download "$2" "-d" "/mnt2/mobile/Library/Keyboard/langlikelihood.dat" "$1"
+    ssh_download "$2" "-f" "/mnt2/mobile/Library/Keyboard/langlikelihood.dat" "$1"
     #ssh_download "$2" "-d" "/mnt2/db/dhcpclient" "$1" #TODO INSPECT OTHER CONTENTS
     
     killall iproxy > /dev/null 2>&1 | true
-    if [ "$(uname)" = 'Linux' ]; then
+    if [ "$specs_system" = 'Linux' ]; then
         sudo killall usbmuxd > /dev/null 2>&1 | true
     fi
+    echo "Done!"
 }
 
 scan_directory() {
@@ -150,6 +153,7 @@ scan_directory() {
 
 echo
 echo "${color_C}----------------------- THREECOVERY ☀️ -----------------------${color_N}"
+echo "${color_C}PRERELEASE (-1.0 🌕)${color_N}"
 
 trap cleanup EXIT
 
@@ -241,4 +245,3 @@ print "All done!* ☀️"
 [[ "$mode" == "ssh" || "$mode" == "file/directory" ]] && print "Wrote to $3"
 print "if something didnt go as expected, read the github"
 echo
-execute "iproxy" "2222" 22
