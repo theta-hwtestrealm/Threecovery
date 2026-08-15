@@ -89,7 +89,13 @@ __9.0-9.3.6, 64 bit:__ Likely this kind of tool is impossible and there isn't an
 - "REMOTE HOST IDENTIFICATION HAS CHANGED!", run `rm -f ~/.ssh/known_hosts`
 - if you use this with a tool like "Legacy iOS Kit" the ramdisk will be unusable after and you must reboot manually.
 - "All"
-  
+
+## Describing notable features
+- Opens NSKeyedArchivers (very roughly, prone to bugs, and in python)
+- Interacts with various other linked data formats (e.g, understanding Apple Core Data logic)
+- Various tools for different situations
+- Intuitive enough to use
+    
 ## This project is meant to demonstrate numerous subjects, but it mostly focuses on unreset BFU devices
 ### Myself and others feel like dodging activation lock is like stepping through a minefield. This is a small documentation about the phenomenon. Also, lot of the quotes below are personal observations, but it must be noted, that Apple and Android devote mass effort keeping device owners anonymous unless they choose not to be (Medical ID, Lost Mode contact, Wallpaper, Etc). 
 `^` means i am looking for a source or more info on a fact.
@@ -127,6 +133,6 @@ iDevices with this feature enabled, will cease to work, showing a message that t
 - John Bumstead [published a detailed video](https://youtu.be/uGgR4srMwLQ) which contained most of the key differences
 - MDM comes after Activation Lock, if your device isn't activation locked you can often bypass it and retain all iCloud functionality`^`
 ### So, what are *my* feelings on Apple? *Note, subject to change*
-I still like Apple, and I love their solutions (especially pre-Cook). Some of these problems are extremely hard to work through whether you accept that or not, however, I feel disappointed. For over a decade Apple has pushed a sub-par policy or at the very least a policy with not enough exceptions, which they've only made more integral, and it's only gotten worse over time device by device amendment by amendment. Beyond this, they used quite unreasonable methods to seemingly hide this issue. Also, whether Apple likes it or not, a hacky-fix had to come for their problem. Threecovery is just that. 
+I still like Apple, and I love their solutions (especially pre-Cook). Some of these problems are extremely hard to work through whether you accept that or not, however, I feel disappointed. For over a decade Apple has pushed a sub-par policy or at the very least a policy with not enough exceptions, which they've only made more integral, and it's only gotten worse over time device by device amendment by amendment. Beyond this, they used quite unreasonable methods to seemingly hide this issue. Also, whether Apple likes it or not, a hacky-fix had to come for their problem. Threecovery is just that. (for legacy versions exclusively)
 
 Final notes, some point out you can often find an email or number in plaintext if you know where to look. This is a good strategy, but there is other, unexpected and valuable data hidden too! I sour on people in Jailbreak communities who police data recovery discussion (or owners of paid tools) hiding this simple in practice information from those who need it.
