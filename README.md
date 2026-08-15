@@ -23,7 +23,7 @@ Apple has had a bad habit for more than a decade, locking devices to their origi
 
 ### You must start by booting an SSH Ramdisk and mounting filesystems. Start by reading *"A Cheat-sheet of tools to use with Threecovery"*
 
-    before first use, run `sudo bash ./runmefirst.sh`
+before first use, run `sudo bash ./runmefirst.sh`
 
   __-h  --help__      information
   
