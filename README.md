@@ -82,11 +82,12 @@ __Any device where you already have infinite passcode attempts:__ [look at this 
 __9.0-9.3.6, 64 bit:__ Likely this kind of tool is impossible and there isn't any other public information, which is unfortunate due to Activation Error. You cannot download from SSH
 
 ## Bugs
-- Cellular-related data is not implemented due to only testing on a handful of devices
+- Cellular-related data is not implemented due to only testing on a 15.8.8 ipad air 2
 - a LOT should be added to the formatting tools, its still very empty
 - code is also very messy, i was a little rushed.
-- "Binary is unusable" means you must run `runmefirst.sh`
+- "Binary is unusable" means you must run `sudo bash ./runmefirst.sh`
 - "REMOTE HOST IDENTIFICATION HAS CHANGED!", run `rm -f ~/.ssh/known_hosts`
+- if you use this with a tool like "Legacy iOS Kit" the ramdisk will be unusable after and you must reboot manually.
 - "All"
   
 ## This project is meant to demonstrate numerous subjects, but it mostly focuses on unreset BFU devices
