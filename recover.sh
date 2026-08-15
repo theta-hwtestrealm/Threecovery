@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-[[ "$BASH_VERSION" ]] || { echo "[Error] Run with bash."; exit 1; }
-bash_ver=$(/usr/bin/env bash -c 'echo ${BASH_VERSINFO[0]}')
-
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 [[ -z "$PROJECT_ROOT" ]] && PROJECT_ROOT="$(pwd)"
 export PROJECT_ROOT
@@ -75,7 +72,10 @@ execute() {
     [[ ! -d "$assumed_dir" && $specs_system == "MacOS" ]] && assumed_dir="$BINARIES/$specs_system"
     [[ ! -d "$assumed_dir" ]] && return 1
     local executable="$assumed_dir/$1"
-    [[ ! -x "$executable" ]] && return 1
+    if [[ ! -x "$executable" ]]; then
+        warn "Binary is unusable!"
+        return 1
+    fi
     $executable "${@:2}" 
 }
 
@@ -131,7 +131,7 @@ ssh_download_all() {
         sleep .1
     fi
     execute "iproxy" "$2" 22 > /dev/null 2>&1 &
-    execute "sshpass" -p alpine ssh root@127.0.0.1 -p2222 -o StrictHostKeyChecking=no "/usr/bin/mount_filesystems || true"
+    execute "sshpass" -p alpine ssh root@127.0.0.1 "-p$2" -o StrictHostKeyChecking=no "/usr/bin/mount_filesystems || true"
     ssh_download "$2" "-f" "/mnt2/mobile/Library/Preferences/com.apple.springboard.plist" "$1"
     ssh_download "$2" "-f" "/mnt2/mobile/Library/Accounts/Accounts3.sqlite" "$1"
     ssh_download "$2" "-d" "/mnt2/mobile/Library/TCC" "$1"
@@ -153,7 +153,7 @@ scan_directory() {
 
 echo
 echo "${color_C}----------------------- THREECOVERY ☀️ -----------------------${color_N}"
-echo "${color_C}PRERELEASE (-1.0 🌕)${color_N}"
+echo "${color_C}RELEASE (0.0 🌕)${color_N}"
 
 trap cleanup EXIT
 
@@ -202,11 +202,6 @@ if ! command -v python3 &> /dev/null; then
     noresource=1
 fi
 
-if ! osascript -l JavaScript -e 'void 0' &> /dev/null; then
-    noresource+="JavaScript is not available and is required. "
-    noresource=1
-fi
-
 if ! command -v perl &> /dev/null; then
     warn "perl is not REQUIRED but is RECOMMENDED for more precise filter features"
 fi
@@ -241,7 +236,7 @@ cd ..
 rm -r temp
 
 echo
-print "All done!* ☀️"
+echo "${color_C}All done!* ☀️${color_N}"
 [[ "$mode" == "ssh" || "$mode" == "file/directory" ]] && print "Wrote to $3"
 print "if something didnt go as expected, read the github"
 echo

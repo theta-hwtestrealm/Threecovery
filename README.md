@@ -1,5 +1,5 @@
 # Threecovery ☀️
-Apple has had a bad habit for more than a decade, locking devic3s to their original owners without permission or knowledge. When one receives another’s old device, its more often than not locked without any of the two parties knowledge.
+Apple has had a bad habit for more than a decade, locking devices to their original owners without permission or knowledge. When one receives another’s old device, its more often than not locked without any of the two parties knowledge.
 
 - Jump to the bottom for the reason this exists
 
@@ -9,7 +9,8 @@ Apple has had a bad habit for more than a decade, locking devic3s to their origi
 
 - This tool is also a good way to see usage statistics and other very unique information that would take you hours to collect otherwise
 
-- Use this at your own peril, at your own demise! ⛈️ <sub>(Please only use if you're confident in your usage and its permissibility)</sub>
+- Use this at your own peril, at your own demise! ⛈️ 
+    <sub>(Please only use if you're confident in your usage and it's permissibility)</sub>
 
 ## How this works:
   On vulnerable devices, you can [boot SSH Ramdisks](https://theapplewiki.com/wiki/SSH_Ramdisk) and download ["Class D" files](https://support.apple.com/guide/security/data-protection-classes-secb010e978a/web). This includes metadata, which can still contain valuable information you might not expect. However, processing this data is also a challenge. The files come in proprietary formats and its hard to sort through valuable and worthless data.
@@ -19,11 +20,14 @@ Apple has had a bad habit for more than a decade, locking devic3s to their origi
 - Threecovery targets any iOS device, provided you can mount filesystems and download unprotected files from `/mnt2`
 - It must be noted that this tool is in desperate need of testing, and is focusing on iOS 10.3-15.8.8
 
+
 ### You must start by booting an SSH Ramdisk and mounting filesystems. Start by reading *"A Cheat-sheet of tools to use with Threecovery"*
+
+    before first use, run `sudo bash ./runmefirst.sh`
 
   __-h  --help__      information
   
-  __-q, --query__      check installs and dependencies <sub>(recommended for first use)</sub>
+  __-q, --query__      check installs and dependencies quickly
 
   __-d, --dir__   extract information from files of dir <sub>(arg #2)</sub> to file <sub>(arg #3)</sub> *<sub>optional arg #4: master json to merge from</sub>*
   
@@ -46,11 +50,9 @@ Apple has had a bad habit for more than a decade, locking devic3s to their origi
 ```zsh
 ./recover.sh -d ./records_dir ./example_file.txt
 ```
+  Remember, use 6414 for Legacy iOS Kit
 
-
-  supported formats:  .json, .plist, .txt
-
-  if you see __zsh: permission denied__ or a similar error, run `chmod +x ./recovery.sh`
+  Supported formats:  .json, .plist, .txt
 
 ## A Cheat-sheet of tools to use with Threecovery
 
@@ -80,14 +82,14 @@ __Any device where you already have infinite passcode attempts:__ [look at this 
 __9.0-9.3.6, 64 bit:__ Likely this kind of tool is impossible and there isn't any other public information, which is unfortunate due to Activation Error. You cannot download from SSH
 
 ## Bugs
-- Initial release
 - Cellular-related data is not implemented due to only testing on a handful of devices
 - a LOT should be added to the formatting tools, its still very empty
-- code is also very messy, i was a little rushed in the end
-- SSH not tested
+- code is also very messy, i was a little rushed.
+- "Binary is unusable" means you must run `runmefirst.sh`
+- "REMOTE HOST IDENTIFICATION HAS CHANGED!", run `rm -f ~/.ssh/known_hosts`
 - "All"
   
-## This project is meant to demonstrate numerous subjects, but it mostly refers to unreset BFU devices
+## This project is meant to demonstrate numerous subjects, but it mostly focuses on unreset BFU devices
 ### Myself and others feel like dodging activation lock is like stepping through a minefield. This is a small documentation about the phenomenon. Also, lot of the quotes below are personal observations, but it must be noted, that Apple and Android devote mass effort keeping device owners anonymous unless they choose not to be (Medical ID, Lost Mode contact, Wallpaper, Etc). 
 `^` means i am looking for a source or more info on a fact.
 ### A summary about Activation Lock: 
@@ -103,10 +105,11 @@ iDevices with this feature enabled, will cease to work, showing a message that t
 - Apple hasn't found or wont publish a solution to this problem, nor will document it themselves.
 - Apple has no known incentive to fix this problem, [everyone knows buying new is more profitable](https://www.ifixit.com/News/61140/what-is-right-to-repair)
 - [Despite being a Right to repair issue, few are talking about it, though it has gotten more attention recently](https://www.ifixit.com/News/98249/activation-locks-are-trashing-millions-of-usable-phones-refurbishers-tell-the-fcc)
-- Apple historically, when they solved issues or added Right to repair features, [they did not apply to older devices or had oversights](https://medium.com/@denis_service36/hi-my-name-is-denis-6d60c01b56db)
+- Apple historically, when they solved issues or added Right to repair features, [they did not apply to older devices/software or had oversights](https://medium.com/@denis_service36/hi-my-name-is-denis-6d60c01b56db)
 - [This isn't an Apple specific problem](https://www.samsung.com/nz/support/mobile-devices/what-is-google-frp/), but they have [very clearly pioneered it](https://www.macrumors.com/2013/06/11/ios-7s-activation-lock-delivers-cautious-optimism-to-officials-concerned-over-mobile-device-thefts/)
 - Apple is letting people get scammed, [phones are a staple on third party resale sites](https://export.ebay.com/en/resources/seasonal-guide-for-ebay-sellers/high-demand-items/), where often no party except apple is aware they are locked.
 - Apple's only, undocumented, solution for "non-owners" is to take the device to an Apple store, where they are likely disposed of `^` or to "contact" the uncontactable owner who has the right to privacy, which apple silently enforces, even if that original owner may want the device back.
+- "Lost" mode devices may not say they are lost if they're Activation Locked^
 - Apple's only official solution for original owners or those immediate to them is a [death certificate, receipt, or other forms of proof](https://al-support.apple.com/#/al/agreement)
 - Apple, around a decade ago would often just remove activation lock if you asked them, according to [Hugh Jeffreys](https://www.hughjeffreys.com/)`^`
 - Apple appears to have started denying most forms of proof in late 2025 even from original owners, due to fraud. (especially eBay or unoriginal invoices)`^`
@@ -117,7 +120,7 @@ iDevices with this feature enabled, will cease to work, showing a message that t
 - Millions of iDevices are affected by this issue, and the number will only rise, it can be a larger issue than parts pairing.`^`
 - On a lighter note, it *__is, now,__* possible to find who these BFU devices belonged to *__sometimes, and with this tool__*
 ### Okay, so what is activation?
-"Activation" was [introduced in iOS 5 to replace the legacy iTunes setup which required a computer.](https://support.apple.com/en-us/102998), Apple controls the activation process, meaning every device needs a response, and to collect accurate data from apple (including which enables cellular). This was never originally an issue, [but with iOS 7 and Tim Cook, Activation Lock was added.](https://www.apple.com/newsroom/2013/06/10Apple-Unveils-iOS-7/), and [apples policies toughened](https://www.ifixit.com/News/34072/apples-activation-lock-will-make-it-very-difficult-to-refurbish-macs) over years [and they now offer high bounties](https://security.apple.com/bounty/categories/) for those able to crack it. Additionally, older systems face problems such as the [iOS 9 64 bit activation issue](https://www.youtube.com/watch?v=Qs6--1np7Rg&t=21s), and other more recent problems like the [8th July, 2026 Baseband unsigning incident](https://www.macrumors.com/2026/07/09/apple-pulls-ability-to-restore-iphone-5c-and-more/) but people still reported activation issue impacts afterwards `^`. [Additionally, most iDevices that have an IMEI starting with `9900` will activation error or activation loop](https://discussions.apple.com/thread/256149288?sortBy=rank) or *most* devices with a bad baseband or Audio IC failure, this is because apple always needs to verify many characteristics of your device to activate it (specifically, to prevent serial swapping)`^` Another issue that occurs is ["Please update this iDevice to Activate"](https://discussions.apple.com/thread/8552696?sortBy=rank) , and finally another issue is [Insert SIM to activate](https://support.apple.com/en-us/108914).
+"Activation" was [introduced in iOS 5 to replace the legacy iTunes setup which required a computer.](https://support.apple.com/en-us/102998), Apple controls the activation process, meaning every device needs a response, and to collect accurate data from apple (including which enables cellular). This was never originally an issue, [but with iOS 7 and Tim Cook, Activation Lock was added.](https://www.apple.com/newsroom/2013/06/10Apple-Unveils-iOS-7/), and [apples policies toughened](https://www.ifixit.com/News/34072/apples-activation-lock-will-make-it-very-difficult-to-refurbish-macs) over years [and they now offer high bounties](https://security.apple.com/bounty/categories/) for those able to crack it. Additionally, older systems face problems such as the [iOS 9 64 bit activation issue](https://www.youtube.com/watch?v=Qs6--1np7Rg&t=21s), and other more recent problems like the [8th July, 2026 Baseband unsigning incident](https://www.macrumors.com/2026/07/09/apple-pulls-ability-to-restore-iphone-5c-and-more/) but people still reported activation issue impacts afterwards `^`. [Additionally, most iDevices that have an IMEI starting with `9900` will activation error or activation loop](https://discussions.apple.com/thread/256149288?sortBy=rank) or *most* devices with a bad baseband or Audio IC failure, this is because apple always needs to verify many (dead) characteristics of your device to activate it (specifically, to prevent serial swapping)`^` Another issue that occurs is ["Please update this iDevice to Activate"](https://discussions.apple.com/thread/8552696?sortBy=rank) , and finally another issue is [Insert SIM to activate](https://support.apple.com/en-us/108914).
 ### But wait, there's also MDM Lock (Mobile Device Management) "Waiting for ____ to configure your device"
 - MDM is much more complex, and something regular users wont see. However, it is extremely damaging at a large scale.
 - John Bumstead [published a detailed video](https://youtu.be/uGgR4srMwLQ) which contained most of the key differences
