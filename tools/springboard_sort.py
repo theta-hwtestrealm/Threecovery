@@ -29,11 +29,17 @@ def parseAllDetectedApps(master,plist):
 
     if "SBDefaultKeyCommandTabPlistRepresentation" in plist:
         for subitem in plist["SBDefaultKeyCommandTabPlistRepresentation"]:
-            appnames.append(subitem["bundleID"])
+            if isinstance(subitem, dict): appnames.append(subitem["bundleID"])
+            else: 
+                print("I am not sure what i am supposed to do because i should be a DICTIONARY")
+                for weird in subitem: print(weird)
 
     if "SBDefaultKeyDockRecentsPlistRepresentation" in plist:
         for subitem in plist["SBDefaultKeyDockRecentsPlistRepresentation"]:
-            appnames.append(subitem["bundleID"])
+            if isinstance(subitem, dict): appnames.append(subitem["bundleID"])
+            else: 
+                print("I am not sure what i am supposed to do because i should be a DICTIONARY")
+                for weird in subitem: print(weird)
 
     for name in appnames:
         result,code = fetchFromPerl("appNameReformat.pl", name, "strict")

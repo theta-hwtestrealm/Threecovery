@@ -40,14 +40,16 @@ if ! command -v perl &> /dev/null; then
     warn "perl is not REQUIRED but is RECOMMENDED for more precise filter features"
 fi
 
+log "Chmoding main shell scripts.."
 chmod +x "$PROJECT_ROOT/runmefirst.sh"
 chmod +x "$PROJECT_ROOT/recover.sh"
 
-for bins in "$PROJECT_ROOT/bin"; do
-    for bin in bins; do
+for bins in "$PROJECT_ROOT/bin/*"; do
+    for bin in "$bins/*"; do
         [[ ! -f "$bin" ]] && continue
+        log "Fixing binary $bin"
         chmod +x "$bin"
-        [[ specs_system == "MacOS" ]] && xattr -d com.apple.quarantine "$bin"
+        [[ "$specs_system" == "MacOS" ]] && xattr -d com.apple.quarantine "$bin"
     done
 done
 
