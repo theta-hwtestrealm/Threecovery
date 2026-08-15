@@ -44,14 +44,16 @@ log "Chmoding main shell scripts.."
 chmod +x "$PROJECT_ROOT/runmefirst.sh"
 chmod +x "$PROJECT_ROOT/recover.sh"
 
-for bins in "$PROJECT_ROOT/bin/*"; do
-    for bin in "$bins/*"; do
-        [[ ! -f "$bin" ]] && continue
-        log "Fixing binary $bin"
-        chmod +x "$bin"
-        [[ "$specs_system" == "MacOS" ]] && xattr -d com.apple.quarantine "$bin"
+if [[ -d "$PROJECT_ROOT/bin" ]]; then
+    for bins in "$PROJECT_ROOT/bin/*"; do
+        for bin in "$bins/*"; do
+            [[ ! -f "$bin" ]] && continue
+            log "Fixing binary $bin"
+            chmod +x "$bin"
+            [[ "$specs_system" == "MacOS" ]] && xattr -d com.apple.quarantine "$bin"
+        done
     done
-done
+fi
 
 echo
 echo "${color_C}All done!* ☀️${color_N}"
