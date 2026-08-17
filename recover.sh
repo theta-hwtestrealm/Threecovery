@@ -164,7 +164,7 @@ ssh_download_all() {
 }
 
 scan_directory() {
-    python3 "$TOOLS/bashtool_scanner.py" "$PWD" "$1"
+    python3 "$TOOLS/shelltool_scanner.py" "$PWD" "$1"
 }
 
 
