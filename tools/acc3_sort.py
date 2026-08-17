@@ -120,7 +120,8 @@ def StupidClearSubDuplicates(anydict):
 
 
 
-def appendPropertiesToAccount(properties, account):
+def appendPropertiesToAccount(properties, account): #everything inside here has kind of strange behavior/requirements
+    displayname=""
     firstname=""
     lastname=""
 
@@ -129,12 +130,25 @@ def appendPropertiesToAccount(properties, account):
             if k in reference: continue 
             print(message,k,"|",v)
 
-    def onObject(aPT, aP):
-        nonlocal firstname,lastname
+    def onObject(aPT, aP): #Main sorting logic, more should be added but it gets complicated
+        nonlocal displayname,firstname,lastname
         global email_type_markers
+
+        #aPT stands for account property type
 
         if aPT == "firstName": firstname += aP
         elif aPT == "lastName": lastname += aP
+        elif aPT == "ACPropertyFullName": #facebook
+            namesq = aP.split()
+            if len(namesq) == 0: return #idk
+            firstname += " ".join(namesq[:-1])
+            lastname += namesq[-1]
+        elif aPT == "ACUIDisplayUsername": #facebook
+            if aP in displayname: return
+            displayname += aP
+        elif aPT == "ACUIDisplayUsername": #facebook
+            if aP == displayname: return
+            displayname += f"(Or, just {displayname})"
         elif aPT == "FullUserName": account["DisplayUsername"] += aP
         elif aPT in email_type_markers: 
             formatted = formatEmail(aP)

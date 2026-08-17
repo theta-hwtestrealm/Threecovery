@@ -75,9 +75,9 @@ OR ZKEY IN(
   'security-level',
   'vettedPrimaryEmail',
   'retaining-services',
-  'primaryAccount', -- can be axed, aAAccountClaAAss will probably contain this info too
-  'accountClass', -- idk
-  'Class', -- just type of account
+  'primaryAccount', -- CAN BE AXED, ACCOUNT CLASS WILL PROBABLY CONTAIN THIS TOO
+  'accountClass', -- IDK
+  'Class', -- JUST TYPE OF ACCOUNT
   'bundleRef',
   'AccountPath',
   'privacyAcknowledgement',
@@ -86,14 +86,21 @@ OR ZKEY IN(
   'canBeCustodian',
   'canHaveCustodian',
   'familyEligible',
+  'NotesNotificationPrefix', --YAHOO RELATED
+  'NotesPushedMailboxes', --YAHOO RELATED
+  'PushedMailboxes', --YAHOO RELATED
+  'GKCredentialScope-5',
+  'playerID', --GAMECENTER, JUST SEEMS TO BE DSI D
+  'personID', --ICLOUD, JUST SEEMS TO BE DSI D
+  'profile-id', -- MESSAGES AND APPLEid JUST SEEMS TO BE DSI D
 
-  --needs tessting
+  --NEEDS TESTING
   'cookies',
   'lastAuthenticationServerResponse',
   'accountFlags',
   'registerSuccessCriteria',
 
-  -- fake, doesnt exist, do not remove. dupe of phoneNUUmbers with stars instead of numbers
+  -- FAKE, DOESNT EXIST, DO NOT REMOVE. DUPE OF PHONEnUMBERS WITH STARS INSTEAD OF NUMBERS
   'obfuscatedPhoneNumbers',
   'silenBurnMiniBuddyEnabled' -- fake, doesnt exist, do not remove. 
 );

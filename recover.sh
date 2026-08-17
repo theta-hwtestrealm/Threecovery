@@ -86,8 +86,27 @@ send_out() {
     local output_type="${output_file##*.}" #file extension
     local output_directory="$(dirname "$output_file")" 
     
-    [[ ! -d "$output_directory" ]] && error "the specified output directory does not exist"
     [[ input_type -ne "json" ]] && error "something is wrong with the result"
+    [[ ! "${2##*/}" == *.* ]] && [ ! -d "$2" ] && mkdir -p "$2"
+    if [[ -d "$output_file" ]]; then # output all files to directory 
+        log "Dumping files to directory instead of making singular file"
+        cp -rn collection/* "$2"
+        cp -n "$1" "$2/rawoutput.json"
+        python3 "$TOOLS/utils/txtify.py" "$1" "$2/textlogs.txt"
+        log "You can safely ignore any \"no such file\" errors below"
+
+        mkdir activation_records
+        mv -n "$2/Fairplay" activation_records/
+        mv -n "$2"/device_specific_nobackup.plist activation_records/
+        mv -n "$2"/data_ark.plist activation_records/
+        mv -n "$2"/*_record.plist activation_records/
+        [[ -z "$(ls -A "activation_records")" ]] && return
+        rm -f activation_records/*-wal
+        rm -f activation_records/*-shm
+        tar -cvf "$2/activation_records.tar" activation_records
+        return
+    fi
+
     [[ -s "$output_file" ]] && error "'$output_file' already exists and will not be overwritten." 
 
     case "$output_type" in
@@ -220,7 +239,8 @@ if [[ "$mode" == "file/directory" ]]; then
         cp "$2" collection
         scan_directory collection
     elif [[ -d "$2" ]]; then
-        scan_directory "$2"
+        cp -r "$2" collection
+        scan_directory collection
     fi
 
     send_out master.json "$3"

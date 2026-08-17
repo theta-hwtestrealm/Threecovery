@@ -4,7 +4,7 @@ use warnings;
 my $text = $ARGV[0] // "";
 my $original = $text;
 
-my %replacements = ( #LOWERCASE INPUT
+my %replacements = ( #LOWERCASE INPUT ONLY
     'ialiexpress'  => 'Aliexpress',
     'facebook talk' => 'Facebook Messenger Kids',
     'facebook orca' => 'Facebook Messenger',
@@ -13,7 +13,8 @@ my %replacements = ( #LOWERCASE INPUT
     'google ios youtube' => 'Youtube',
     'google ios ytcreator' => 'Youtube Create',
     'burbn instagram' => 'Instagram',
-    'amazon aiv aivapp' => 'Amazon Prime Video' #amazon instant video
+    'amazon aiv aivapp' => 'Amazon Prime Video', #amazon instant video
+    'lemon lvoverseas' => 'CapCut'
 );
 my $pattern = join '|', map { quotemeta } keys %replacements;
 
