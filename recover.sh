@@ -171,7 +171,7 @@ scan_directory() {
 
 echo
 echo "${color_C}----------------------- THREECOVERY ☀️ -----------------------${color_N}"
-echo "${color_C}RELEASE (0.0 🌕)${color_N}"
+echo "${color_C}RELEASE (0.5 🌕)${color_N}"
 
 trap cleanup EXIT
 
