@@ -82,24 +82,23 @@ execute() {
 send_out() {
     local input_file="$1"; local output_file="$2"
     local input_type="${input_file##*.}" #file extension
-    local input_directory="$(dirname "$input_file")" 
     local output_type="${output_file##*.}" #file extension
     local output_directory="$(dirname "$output_file")" 
     
     [[ input_type -ne "json" ]] && error "something is wrong with the result"
-    [[ ! "${2##*/}" == *.* ]] && [ ! -d "$2" ] && mkdir -p "$2"
+    [[ ! "${2##*/}" == *.* ]] && [[ ! -d "$2" ]] && mkdir -p "$2"
+    [[ -n "$(ls -A $2)" ]] && error "this folder is not empty and data will not be overwritten"
     if [[ -d "$output_file" ]]; then # output all files to directory 
         log "Dumping files to directory instead of making singular file"
         cp -rn collection/* "$2"
         cp -n "$1" "$2/rawoutput.json"
         python3 "$TOOLS/utils/txtify.py" "$1" "$2/textlogs.txt"
-        log "You can safely ignore any \"no such file\" errors below"
 
         mkdir activation_records
-        mv -n "$2/Fairplay" activation_records/
-        mv -n "$2"/device_specific_nobackup.plist activation_records/
-        mv -n "$2"/data_ark.plist activation_records/
-        mv -n "$2"/*_record.plist activation_records/
+        mv -n "$2/Fairplay" activation_records/ &> /dev/null
+        mv -n "$2"/device_specific_nobackup.plist activation_records/ &> /dev/null
+        mv -n "$2"/data_ark.plist activation_records/ &> /dev/null
+        mv -n "$2"/*_record.plist activation_records/ &> /dev/null
         [[ -z "$(ls -A "activation_records")" ]] && return
         rm -f activation_records/*-wal
         rm -f activation_records/*-shm
@@ -163,17 +162,11 @@ ssh_download_all() {
     echo "Done!"
 }
 
-scan_directory() {
-    python3 "$TOOLS/shelltool_scanner.py" "$PWD" "$1"
-}
-
 
 
 echo
 echo "${color_C}----------------------- THREECOVERY ☀️ -----------------------${color_N}"
 echo "${color_C}RELEASE (0.5 🌕)${color_N}"
-
-trap cleanup EXIT
 
 case "$command" in
     "-q"|"--query") 
@@ -181,7 +174,7 @@ case "$command" in
     ;;
     "-d"|"--dir")
     mode="file/directory"
-    [[ ! -d "$2" && ! -f "$2" ]] && error '"$2" is an invalid file/directory'
+    [[ ! -d "$2" && ! -f "$2" ]] && error '"$2" does not exist!'
     ;;
     "-s"|"--ssh")
     mode="ssh"
@@ -197,12 +190,22 @@ case "$command" in
     ;;
 esac
 
+
+case "$(uname -m)" in
+    x86_64|amd64)   specs_architecture="x86_64" ;;
+    i386|i686|x86)  specs_architecture="x86_32" ;;
+    arm64|aarch64)  specs_architecture="arm64" ;;
+    armv7l|armv7)   specs_architecture="armv7" ;;
+    armv6l|armv6)   specs_architecture="armv6" ;;
+    *) error "Cannot determine architecture" ;;
+esac
+
 if [[ $OSTYPE == "linux"* ]]; then
     specs_system="Linux"
-    [[ $(uname -m) == "a"* && $(getconf LONG_BIT) == 64 ]] && specs_architecture="arm64" || specs_architecture="x86_64"
+    #[[ $(uname -m) == "a"* && $(getconf LONG_BIT) == 64 ]] && specs_architecture="arm64" || specs_architecture="x86_64"
 elif [[ $OSTYPE == "darwin"* ]]; then
     specs_system="MacOS"
-    specs_architecture="$(uname -m)"
+    #specs_architecture="$(uname -m)"
 fi
 
 if [[ ! -d "$BINARIES" ]]; then
@@ -224,30 +227,28 @@ if ! command -v perl &> /dev/null; then
     warn "perl is not REQUIRED but is RECOMMENDED for more precise filter features"
 fi
 
-[[ noresource == 1 ]] && error "noresourcetxt"
+[[ noresource == 1 ]] && error "$noresourcetxt"
 [[ "$mode" == "skip" ]] && echo && print "Test finished successfully! ☀️" && echo && exit
 print "running in $mode mode"
 print "from source $2"
 echo
 
+trap cleanup EXIT
 mkdir -p temp
 cd temp
 
 if [[ "$mode" == "file/directory" ]]; then
-    if [[ -f "$2" ]]; then
-        mkdir -p collection
-        cp "$2" collection
-        scan_directory collection
-    elif [[ -d "$2" ]]; then
-        cp -r "$2" collection
-        scan_directory collection
+    mkdir -p collection
+    if ! cp -r "$2"/* collection/ &> /dev/null; then
+        log "Single-file mode instead"
+        cp -r "$2" collection/
     fi
-
+    python3 "$TOOLS/shelltool_scanner.py" "$PWD" "$PWD/collection"
     send_out master.json "$3"
 elif [[ "$mode" == "ssh" ]]; then
     mkdir -p collection 
     ssh_download_all collection "$2"
-    scan_directory collection
+    python3 "$TOOLS/shelltool_scanner.py" "$PWD" "$PWD/collection"
     send_out master.json "$3"
 fi
 
