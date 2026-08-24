@@ -45,8 +45,8 @@ chmod +x "$PROJECT_ROOT/runmefirst.sh"
 chmod +x "$PROJECT_ROOT/recover.sh"
 
 if [[ -d "$PROJECT_ROOT/bin" ]]; then
-    for bins in "$PROJECT_ROOT/bin/*"; do
-        for bin in "$bins/*"; do
+    for bins in "$PROJECT_ROOT/bin"/*; do
+        for bin in "$bins"/*; do
             [[ ! -f "$bin" ]] && continue
             log "Fixing binary $bin"
             chmod +x "$bin"
@@ -58,4 +58,5 @@ fi
 echo
 echo "${color_C}All done!* ☀️${color_N}"
 print "if something didnt go as expected, read the github"
+print "Now, to use the script run ./recover.sh" #, OR pwsh ./universal.ps1
 echo

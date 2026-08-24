@@ -99,9 +99,9 @@ send_out() {
         mv -n "$2"/device_specific_nobackup.plist activation_records/ &> /dev/null
         mv -n "$2"/data_ark.plist activation_records/ &> /dev/null
         mv -n "$2"/*_record.plist activation_records/ &> /dev/null
-        [[ -z "$(ls -A "activation_records")" ]] && return
         rm -f activation_records/*-wal
         rm -f activation_records/*-shm
+        [[ -z "$(ls -A "activation_records")" ]] && return
         tar -cvf "$2/activation_records.tar" activation_records
         return
     fi
@@ -228,6 +228,7 @@ if ! command -v perl &> /dev/null; then
 fi
 
 [[ noresource == 1 ]] && error "$noresourcetxt"
+[[ -d "temp" ]] && error "Theres a directory named temp, to solve this type rm -r temp to delete it"
 [[ "$mode" == "skip" ]] && echo && print "Test finished successfully! ☀️" && echo && exit
 print "running in $mode mode"
 print "from source $2"
