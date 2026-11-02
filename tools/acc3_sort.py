@@ -3,9 +3,10 @@ import copy
 import sqlite3
 import json
 import subprocess
-import pickle
 import shutil
 from pathlib import Path
+
+from utils.NSKAOpener import open_NSKeyedArchiver
 
 email_type_markers = [
     "appleID", "apple-id", "email-address", "primaryEmail", "forwardingEmail", "authorizationEmailSelection",
@@ -47,23 +48,6 @@ def fetchAccountTypes(cursor): #get all accounttypes (their names) that werent o
         result[row["Z_PK"]] = row["ZACCOUNTTYPEDESCRIPTION"]
 
     return result
-
-def fetchFromPytool(tool, stdin, *args): #pickling
-    global toolkit
-
-    command = [sys.executable, str(Path(toolkit)/"utils"/tool), *args]
-    data = subprocess.run(command, input=stdin, capture_output=True, text=False)
-
-    if not data.stdout and data.stderr:
-        print("----------------------------------")
-        print(data.stderr.decode('utf-8', errors='ignore'))
-        print("----------------------------------")
-
-    try:
-        return pickle.loads(data.stdout)
-    except Exception as e:
-        print(f"pickle may have encountered an issue")
-        return data.stdout.decode('utf-8', errors='ignore').strip()
 
 def fetchFromPerl(tool, *args): #input, mode, etc arguments
     global toolkit
@@ -192,7 +176,8 @@ def appendPropertiesToAccount(properties, account): #everything inside here has 
 
     for row in properties:
         aPT = row["ZKEY"] #property type
-        aP = fetchFromPytool("pytool_NSKAOpener.py", row["ZVALUE"], "stream")
+        #aP = fetchFromPytool("pytool_NSKAOpener.py", row["ZVALUE"], "stream")
+        aP = open_NSKeyedArchiver("stream", bytes(row["ZVALUE"]), True)
         onObject(aPT,aP)
         
     if firstname != "" and lastname != "":
@@ -261,15 +246,8 @@ def parseAccountInformation(cursor, master):
 
 
 
-def extract():
+def acc3_sort(tools, work):
     global toolkit
-
-    if len(sys.argv) != 2:
-        print("you might have a space in a system path or something, not designed to handle this")
-        sys.exit(1)
-
-    tools = Path(sys.argv[0]).resolve().parent
-    work = sys.argv[1]
 
     toolkit = tools
 
@@ -291,4 +269,10 @@ def extract():
 
 
 if __name__ == "__main__":
-    extract()
+    if len(sys.argv) != 2:
+        print("you might have a space in a system path or something, not designed to handle this")
+        sys.exit(1)
+
+    tools = Path(sys.argv[0]).resolve().parent
+    work = sys.argv[1]
+    acc3_sort(tools, work)

@@ -30,14 +30,7 @@ def processMiscData(key,data):
 
 
 
-def txtify():
-    if len(sys.argv) != 3:
-        print("you might have a space in a system path or something, not designed to handle this")
-        sys.exit(1)
-
-    filein = sys.argv[1]
-    fileout = sys.argv[2]
-
+def txtify(filein, fileout):
     master = None
     output = ""
 
@@ -92,4 +85,10 @@ def txtify():
 
 
 if __name__ == "__main__":
-    txtify()
+    if len(sys.argv) != 3:
+        print("you might have a space in a system path or something, not designed to handle this")
+        sys.exit(1)
+
+    filein = sys.argv[1]
+    fileout = sys.argv[2]
+    txtify(filein, fileout)

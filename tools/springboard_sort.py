@@ -22,6 +22,29 @@ def fetchFromPerl(tool, *args): #input, mode, etc arguments
 
 def parseAllDetectedApps(master,plist):
     appnames=[]
+    didlegacystuff=False
+
+    def DoLegacyStuff(item): #if its a list and not a dictionary (pre ios 13 seemingly)
+        nonlocal didlegacystuff
+        if not didlegacystuff:
+            print("Legacy Springboard apps layout (~iOS < 13)")
+            didlegacystuff = True
+        itemtype = item[0]
+        itemvalue = item[1]
+        
+        if "com.apple." in itemvalue: 
+            appnames.append(itemvalue)
+            return
+        elif itemtype != "App":
+            print("UNKNOWN non-app type, listed below")
+            for weird in subitem: print(weird)
+
+        if len(item) > 2:
+            print("UNKNOWN, extra data, expected 2 values but got more, listed below")
+            for weird in subitem: print(weird)
+        appnames.append(itemvalue)
+        
+
 
     if "SBDisplayIDsWithBadgingEnabled" in plist:
         for app in plist["SBDisplayIDsWithBadgingEnabled"]:
@@ -30,16 +53,12 @@ def parseAllDetectedApps(master,plist):
     if "SBDefaultKeyCommandTabPlistRepresentation" in plist:
         for subitem in plist["SBDefaultKeyCommandTabPlistRepresentation"]:
             if isinstance(subitem, dict): appnames.append(subitem["bundleID"])
-            else: 
-                print("I am not sure what i am supposed to do because i should be a DICTIONARY")
-                for weird in subitem: print(weird)
+            else: DoLegacyStuff(subitem)
 
     if "SBDefaultKeyDockRecentsPlistRepresentation" in plist:
         for subitem in plist["SBDefaultKeyDockRecentsPlistRepresentation"]:
             if isinstance(subitem, dict): appnames.append(subitem["bundleID"])
-            else: 
-                print("I am not sure what i am supposed to do because i should be a DICTIONARY")
-                for weird in subitem: print(weird)
+            else: DoLegacyStuff(subitem)
 
     for name in appnames:
         result,code = fetchFromPerl("appNameReformat.pl", name, "strict")
@@ -82,15 +101,8 @@ def parseOther(master,plist):
 
     
 
-def extract():
+def springboard_sort(tools, work):
     global toolkit
-    
-    if len(sys.argv) != 2:
-        print("you might have a space in a system path or something, not designed to handle this")
-        sys.exit(1)
-
-    tools = Path(sys.argv[0]).resolve().parent
-    work = sys.argv[1]
 
     toolkit = tools
 
@@ -114,4 +126,10 @@ def extract():
         json.dump(master, file, indent=4)
 
 if __name__ == "__main__":
-    extract()
+    if len(sys.argv) != 2:
+        print("you might have a space in a system path or something, not designed to handle this")
+        sys.exit(1)
+
+    tools = Path(sys.argv[0]).resolve().parent
+    work = sys.argv[1]
+    springboard_sort(tools, work)

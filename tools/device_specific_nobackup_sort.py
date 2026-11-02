@@ -20,15 +20,8 @@ def fetchFromPerl(tool, *args): #input, mode, etc arguments
     except subprocess.CalledProcessError as e:
         return "", e.returncode
 
-def extract():
+def device_specific_nobackup_sort(tools, work):
     global toolkit
-    
-    if len(sys.argv) != 2:
-        print("you might have a space in a system path or something, not designed to handle this")
-        sys.exit(1)
-
-    tools = Path(sys.argv[0]).resolve().parent
-    work = sys.argv[1]
 
     toolkit = tools
 
@@ -40,24 +33,41 @@ def extract():
         master = json.load(file)
 
     plist = plistlib.load(plist)
-    number = "None"
+
+    phone_numbers = []
+
+    if "CDMANetworkPhoneNumber" in plist:
+        phone_numbers.append(plist["CDMANetworkPhoneNumber"])
+    if "NetworkPhoneNumber" in plist:
+        phone_numbers.append(plist["NetworkPhoneNumber"])
+    if "PhoneNumber" in plist:
+        phone_numbers.append(plist["PhoneNumber"])
+    if "SIMPhoneNumber" in plist:
+        phone_numbers.append(plist["SIMPhoneNumber"])
 
     #TODO extract
 
-    result,code = fetchFromPerl("numPhReformat.pl", number, "strict")
-    
-    if code == None:
-        pass #copied
-    elif code != 0:
-        number = f"|| {number} || Perl ran into a problem ({ code })"
-    else:
-        number = result
+    for number in phone_numbers:
+        result,code = fetchFromPerl("numPhReformat.pl", number, "strict")
+        
+        if code == None:
+            pass #copied
+        elif code != 0:
+            number = f"|| {number} || Perl ran into a problem ({ code })"
+        else:
+            number = result
 
-    master["AttachedPhoneNumbersAndEmails"].append(number)
+        master["AttachedPhoneNumbersAndEmails"].append(number)
 
     # package into output
     with open(result_path, "w") as file:
         json.dump(master, file, indent=4)
 
 if __name__ == "__main__":
-    extract()
+    if len(sys.argv) != 2:
+        print("you might have a space in a system path or something, not designed to handle this")
+        sys.exit(1)
+
+    tools = Path(sys.argv[0]).resolve().parent
+    work = sys.argv[1]
+    device_specific_nobackup_sort(tools, work)

@@ -65,17 +65,8 @@ def parseDB(master,cursor):
         mfirstused,mlastused = fetchTimestampComp(master["FirstUsed"], master["LastUsed"], firstused,lastused)
         master["FirstUsed"] = mfirstused; master["LastUsed"] = mlastused
 
-def extract():
+def TCC_sort(tools,work,dir):
     global toolkit
-        
-    if len(sys.argv) != 3:
-        print("you might have a space in a system path or something, not designed to handle this")
-        sys.exit(1)
-
-    tools = Path(sys.argv[0]).resolve().parent
-    work = sys.argv[1]
-    dir = sys.argv[2]
-
     toolkit = tools
 
     master = str(Path(work)/"master.json")
@@ -99,4 +90,11 @@ def extract():
         json.dump(master, file, indent=4)
 
 if __name__ == "__main__":
-    extract()
+    if len(sys.argv) != 3:
+        print("you might have a space in a system path or something, not designed to handle this")
+        sys.exit(1)
+
+    tools = Path(sys.argv[0]).resolve().parent
+    work = sys.argv[1]
+    dir = sys.argv[2]
+    TCC_sort(tools,work,dir)

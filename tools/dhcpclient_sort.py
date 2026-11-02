@@ -4,36 +4,9 @@ import subprocess
 import pickle
 from pathlib import Path
 
-def fetchFromPytool(tool, stdin, *args):
-    global toolkit
+from utils.NSKAOpener import open_NSKeyedArchiver
 
-    command = [sys.executable, str(Path(toolkit)/"utils"/tool), *args]
-    data = subprocess.run(command, input=stdin, capture_output=True, text=False)
-
-    if not data.stdout and data.stderr:
-        print("----------------------------------")
-        print(data.stderr.decode('utf-8', errors='ignore'))
-        print("----------------------------------")
-
-    try:
-        return pickle.loads(data.stdout)
-    except Exception as e:
-        print(f"pickle may have encountered an issue")
-        return data.stdout.decode('utf-8', errors='ignore').strip()
-
-def extract():
-    global toolkit
-    
-    if len(sys.argv) != 3:
-        print("you might have a space in a system path or something, not designed to handle this")
-        sys.exit(1)
-
-    tools = Path(sys.argv[0]).resolve().parent
-    work = sys.argv[1]
-    dir = sys.argv[2]
-
-    toolkit = tools
-
+def dhcpclient_sort(tools, work, dir):
     master = str(Path(work)/"master.json")
     result_path = str(Path(work)/"result.json")
 
@@ -42,7 +15,8 @@ def extract():
 
     for plist in (Path(dir)/"leases").iterdir():
         with open(plist, "rb") as data:
-            wifi = fetchFromPytool("pytool_NSKAOpener.py", data.read(), "stream")
+            #wifi = fetchFromPytool("pytool_NSKAOpener.py", data.read(), "stream")
+            wifi = open_NSKeyedArchiver("stream", data.read(), True)
             wifibody = master["TemplatePieces"]["WifiNetwork"].copy()
 
             if "SSID" in wifi:
@@ -59,4 +33,11 @@ def extract():
         json.dump(master, file, indent=4)
 
 if __name__ == "__main__":
-    extract()
+    if len(sys.argv) != 3:
+        print("you might have a space in a system path or something, not designed to handle this")
+        sys.exit(1)
+
+    tools = Path(sys.argv[0]).resolve().parent
+    work = sys.argv[1]
+    dir = sys.argv[2]
+    dhcpclient_sort(tools, work, dir)

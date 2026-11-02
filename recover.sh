@@ -15,7 +15,6 @@ PASSWORD="alpine"
 specs_system=""
 specs_architecture=""
 
-command="$1"
 mode="none"
 
 read -r -d '' USAGE << 'EOF'
@@ -67,6 +66,15 @@ cleanup() {
     fi
 }
 
+pathfailure() {
+    cd ..
+    rm -r temp_3c
+    warn "One of the supplied paths is invalid"
+    warn "Paths must start with /, they cannot start with ./ or be 'file.txt'"
+    warn "Be my guest if you want to fix this, i intend to."
+    error "Cannot continue"
+}
+
 execute() {
     local assumed_dir="$BINARIES/${specs_system}_$specs_architecture"
     [[ ! -d "$assumed_dir" && $specs_system == "MacOS" ]] && assumed_dir="$BINARIES/$specs_system"
@@ -104,18 +112,20 @@ send_out() {
         [[ -z "$(ls -A "activation_records")" ]] && return
         tar -cvf "$2/activation_records.tar" activation_records
         return
+    else
+        output_file=$(cd "$(dirname $output_file)" && echo "$(pwd)/$(basename $output_file)")
     fi
 
     [[ -s "$output_file" ]] && error "'$output_file' already exists and will not be overwritten." 
 
     case "$output_type" in
     "txt")
-    python3 "$TOOLS/utils/txtify.py" "$1" "$2"
+    python3 "$TOOLS/utils/txtify.py" "$1" "$output_file"
     return
     ;;
 
     "plist")
-    python3 -c "import sys, json, plistlib; plistlib.dump(json.load(open(sys.argv[2])), open(sys.argv[1], 'wb'))" "$1" "$2"
+    python3 -c "import sys, json, plistlib; plistlib.dump(json.load(open(sys.argv[2])), open(sys.argv[1], 'wb'))" "$1" "$output_file"
     return
     ;;
 
@@ -147,13 +157,23 @@ ssh_download_all() {
         sudo usbmuxd -pf > /dev/null 2>&1 &
         sleep .1
     fi
-    execute "iproxy" "$2" 22 > /dev/null 2>&1 &
-    execute "sshpass" -p alpine ssh root@127.0.0.1 "-p$2" -o StrictHostKeyChecking=no "/usr/bin/mount_filesystems || true"
+
+    local mountcmd="mount | grep -q 'on /mnt2' || /usr/bin/mount_filesystems || true"
+    echo "mount filesystems automatically? (A7/A8/A9/A10/A11 on iOS 11 and later)"
+    if read -r -p "lowercase y/n: " toast && [ "$toast" == "y" ]; then
+        execute "iproxy" "$2" 22 > /dev/null 2>&1 &
+        execute "sshpass" -p alpine ssh root@127.0.0.1 "-p$2" -o StrictHostKeyChecking=no "$mountcmd"
+    else
+        echo "not mounting automatically"
+        execute "iproxy" "$2" 22 > /dev/null 2>&1 &
+    fi
+
     ssh_download "$2" "-f" "/mnt2/mobile/Library/Preferences/com.apple.springboard.plist" "$1"
     ssh_download "$2" "-f" "/mnt2/mobile/Library/Accounts/Accounts3.sqlite" "$1"
     ssh_download "$2" "-d" "/mnt2/mobile/Library/TCC" "$1"
     ssh_download "$2" "-f" "/mnt2/mobile/Library/Keyboard/langlikelihood.dat" "$1"
-    #ssh_download "$2" "-d" "/mnt2/db/dhcpclient" "$1" #TODO INSPECT OTHER CONTENTS
+    ssh_download "$2" "-d" "/mnt2/db/dhcpclient" "$1"
+    ssh_download "$2" "-f" "/mnt2/wireless/Library/Preferences/com.apple.commcenter.device_specific_nobackup.plist" "$1"
     
     killall iproxy > /dev/null 2>&1 | true
     if [ "$specs_system" = 'Linux' ]; then
@@ -168,7 +188,7 @@ echo
 echo "${color_C}----------------------- THREECOVERY ☀️ -----------------------${color_N}"
 echo "${color_C}RELEASE (0.5 🌕)${color_N}"
 
-case "$command" in
+case "$1" in
     "-q"|"--query") 
     mode="skip"
     ;;
@@ -228,33 +248,59 @@ if ! command -v perl &> /dev/null; then
 fi
 
 [[ noresource == 1 ]] && error "$noresourcetxt"
-[[ -d "temp" ]] && error "Theres a directory named temp, to solve this type rm -r temp to delete it"
+[[ -d "temp_3c" ]] && error "Theres a directory named temp_3c, to solve this type rm -r temp_3c to delete it"
 [[ "$mode" == "skip" ]] && echo && print "Test finished successfully! ☀️" && echo && exit
 print "running in $mode mode"
 print "from source $2"
 echo
 
+lastdir="$PWD"
+
 trap cleanup EXIT
-mkdir -p temp
-cd temp
+mkdir -p temp_3c
+cd temp_3c
+
+if python3 -m json.tool "$4" > /dev/null 2>&1; then
+    print "Adding new information to preexisting template"
+    cp "$4" "master.json"
+fi
 
 if [[ "$mode" == "file/directory" ]]; then
+    annoyingasfixedtarget=""
+    case $3 in
+    ./*) annoyingasfixedtarget="$lastdir/${3#./}";;
+    /*);;
+    *) annoyingasfixedtarget="$lastdir/$3";;
+    esac
+    print "Output is $annoyingasfixedtarget"
+
+    [[ ! "$annoyingasfixedtarget" == "/"* ]] && pathfailure
+    #[[ ! -e "$2" ]] && pathfailure 
     mkdir -p collection
     if ! cp -r "$2"/* collection/ &> /dev/null; then
         log "Single-file mode instead"
         cp -r "$2" collection/
     fi
     python3 "$TOOLS/shelltool_scanner.py" "$PWD" "$PWD/collection"
-    send_out master.json "$3"
+    send_out master.json "$annoyingasfixedtarget"
 elif [[ "$mode" == "ssh" ]]; then
+   annoyingasfixedtarget=""
+   case $3 in
+    ./*) annoyingasfixedtarget="$lastdir/${3#./}";;
+    /*);;
+    *) annoyingasfixedtarget="$lastdir/$3";;
+    esac
+    print "Output is $annoyingasfixedtarget"
+
+    [[ ! "$annoyingasfixedtarget" == "/"* ]] && pathfailure
     mkdir -p collection 
     ssh_download_all collection "$2"
     python3 "$TOOLS/shelltool_scanner.py" "$PWD" "$PWD/collection"
-    send_out master.json "$3"
+    send_out master.json "$annoyingasfixedtarget"
 fi
 
 cd ..
-rm -r temp
+rm -r temp_3c
 
 echo
 echo "${color_C}All done!* ☀️${color_N}"
