@@ -161,6 +161,7 @@ ssh_download_all() {
     local mountcmd="mount | grep -q 'on /mnt2' || /usr/bin/mount_filesystems || true"
     echo "mount filesystems automatically? (A7/A8/A9/A10/A11 on iOS 11 and later)"
     if read -r -p "lowercase y/n: " toast && [ "$toast" == "y" ]; then
+        echo "mounting..."
         execute "iproxy" "$2" 22 > /dev/null 2>&1 &
         execute "sshpass" -p alpine ssh root@127.0.0.1 "-p$2" -o StrictHostKeyChecking=no "$mountcmd"
     else
@@ -186,7 +187,7 @@ ssh_download_all() {
 
 echo
 echo "${color_C}----------------------- THREECOVERY ☀️ -----------------------${color_N}"
-echo "${color_C}RELEASE (0.5 🌕)${color_N}"
+echo "${color_C}RELEASE (1.0.2 🌕)${color_N}"
 
 case "$1" in
     "-q"|"--query") 

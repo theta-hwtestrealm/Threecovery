@@ -28,12 +28,21 @@ def fetchFromPerl(tool, *args): #input, mode, etc arguments
         return "", e.returncode
 
 def parseDB(master,cursor):
-    cursor.execute("SELECT client, last_modified FROM access")
+    cursor.execute("PRAGMA table_info(access)")
+    columns = [row["name"] for row in cursor.fetchall()]
+
+    if "last_modified" in columns:
+        cursor.execute("SELECT client, last_modified FROM access")
+    else:
+        #Requirement for iOS 10 (?) as per issue #1
+        cursor.execute("SELECT client, NULL AS last_modified FROM access")
+
     apps = cursor.fetchall()
 
     for accountitem in apps:
         name = accountitem["client"]
-        lastmod = accountitem["last_modified"]-978307200
+        #lastmod = accountitem["last_modified"]-978307200
+        lastmod = accountitem.get("last_modified")-978307200 if isinstance(accountitem, dict) else None
 
         result,code = fetchFromPerl("appNameReformat.pl", name, "strict")
         final = ""
@@ -60,10 +69,11 @@ def parseDB(master,cursor):
             appbody["Name"] = final
             master["Apps"].append(appbody)
 
-        firstused,lastused = fetchTimestampComp(appbody["FirstUsed"],appbody["LastUsed"],lastmod)
-        appbody["FirstUsed"] = firstused; appbody["LastUsed"] = lastused
-        mfirstused,mlastused = fetchTimestampComp(master["FirstUsed"], master["LastUsed"], firstused,lastused)
-        master["FirstUsed"] = mfirstused; master["LastUsed"] = mlastused
+        if lastmod:
+            firstused,lastused = fetchTimestampComp(appbody["FirstUsed"],appbody["LastUsed"],lastmod)
+            appbody["FirstUsed"] = firstused; appbody["LastUsed"] = lastused
+            mfirstused,mlastused = fetchTimestampComp(master["FirstUsed"], master["LastUsed"], firstused,lastused)
+            master["FirstUsed"] = mfirstused; master["LastUsed"] = mlastused
 
 def TCC_sort(tools,work,dir):
     global toolkit
