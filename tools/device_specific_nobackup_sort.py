@@ -32,7 +32,8 @@ def device_specific_nobackup_sort(tools, work):
     with open(master, "r") as file:
         master = json.load(file)
 
-    plist = plistlib.load(plist)
+    with open(plist, "rb") as file:
+        plist = plistlib.load(file)
 
     phone_numbers = []
 
