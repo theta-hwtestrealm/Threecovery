@@ -27,7 +27,7 @@ def device_specific_nobackup_sort(tools, work):
 
     master = str(Path(work)/"master.json")
     result_path = str(Path(work)/"result.json")
-    plist = str(Path(work)/"live_fileplist")
+    plist = str(Path(work)/"live_file.plist")
 
     with open(master, "r") as file:
         master = json.load(file)
