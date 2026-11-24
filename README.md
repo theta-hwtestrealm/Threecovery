@@ -1,5 +1,5 @@
 # Threecovery ☀️
-- README2.MD for why this exists
+Useful tool for FMI OFF methods
 
 - This is __NOT__ a bruteforce tool.. but check README2.MD~!
 
@@ -8,42 +8,45 @@
 - This tool is also a good way to see usage statistics and other unique information.
 
 - Use at your own peril, at your own demise ⛈️ 
-    <sub>(Only use if you're confident it's permissable)</sub>
+    <sub>(Only use if it's permissable)</sub>
 
-## Usage Guide
-- Threecovery only works on MacOS silicon and MacOS x86 right now.
+## Usage Guide (Instructions)
+- Threecovery is only tested on modern and legacy MacOS right now
 - Threecovery targets any iOS device, provided you can mount filesystems and download unprotected files from `/mnt2`
-- This tool is focusing on iOS 10.3-15.8.8
+- This tool is focusing on iOS 10.3-15.8.8, but may support 7+ and 16+
 
+**Before first use, run** `sudo bash ./runmefirst.sh`
 
-### You must start by booting an SSH Ramdisk. Start by reading *"A Cheat-sheet of tools to use with Threecovery"*
+### To start, boot an SSH Ramdisk of your choice. Start by reading *"A Cheat-sheet of tools to use with Threecovery"*
 
-before first use, run `sudo bash ./runmefirst.sh`
+- **Commands, and usage**
 
   __-h  --help__      information
   
   __-q, --query__      check installs and dependencies quickly
 
-  __-d, --dir__   extract information from files of dir <sub>(arg #2)</sub> to file <sub>(arg #3)</sub> *<sub>optional arg #4: master json to merge from</sub>*
+  __-d, --dir__   extract information from file <sub>(arg #2)</sub> into file <sub>(arg #3)</sub> *<sub>optional arg #4: master json to merge from</sub>*
   
-  __-s, --ssh__   extract information from SSH port <sub>(arg #2)</sub> to file <sub>(arg #3)</sub> *<sub>optional arg #4: master json to merge from</sub>*
+  __-s, --ssh__   extract information from SSH port <sub>(arg #2)</sub> into file <sub>(arg #3)</sub> *<sub>optional arg #4: master json to merge from</sub>*
 
   __-f, --format__    format record <sub>(arg #2)</sub> into <sub>(arg #3)</sub>  *<sub>(.txt is obviously not supported by -f, if you need merging, dont use txt)</sub>*
 
   *<sub>optional arg #4: master json to merge from is actually not complete and i dont know if i intend to fix it </sub>*
   
-  as a side note, JSON is the original and most compatible format, and __-d__ can also run on just a singular file
+  Note: JSON is the raw, convertable format
 
-  ### Examples
+  Note: __-d__ can process singular files and entire directories
+
+### Examples
 Example below displays all help info
 ```zsh
 ./recover.sh -h
 ```
-Example below connects to port 2222, downloads files, and outputs extraction result to example_file.txt 
+Example below connects to port 2222, downloads files, and outputs processed result to example_file.txt  (Everything you want)
 ```zsh
 ./recover.sh -s 2222 ./example_file.txt
 ```
-instead of downloading from a device, you can also specify a folder with the files inside
+instead of downloading from a device, you can also specify some files you already downloaded
 ```zsh
 ./recover.sh -d ./records_dir ./example_file.txt
 ```
@@ -65,9 +68,11 @@ __A9x, A10x, A11, iOS 16.0-18.7.9:__ No recommended tools yet, but it should def
 
 __A12/A13:__ No recommended tools yet, but it should be possible
 
-## Unsupported, see below for other, better tools to use.
+__armv7 (32bit) iOS 7+__ Works, Used to extract phone number (useful for open menu)
+
+## See below for other, better tools to use.
   
-__A7/A8/A8x, iOS 7.0-8.4.1 (Disabled+Infinite Attempt):__ iPh0ne4s/SSHRD_Script `--bruteforce` command
+__A7/A8/A8x, iOS 7.0-8.4.1 (Remove Disabled+Infinite Attempts):__ iPh0ne4s/SSHRD_Script `--bruteforce` command
 __A7/A8/A8x, iOS 7.0-8.4.1 find passcode:__ [j1ans/QwQRamdisk](https://github.com/j1ans/QwQramdisk) and [j1ans/Brute](https://github.com/j1ans/Brute)
 
 __armv6/armv7 devices (Disabled+Infinite Attempt) iOS 1.0-8.4.1:__ download `/mnt2/mobile/Library/Preferences/com.apple.springboard.plist` in Legacy iOS Kit SSH Ramdisk, set failed attempts to `-9999` and reupload it. You should also __fully delete and remove__ other SBDeviceLockedBlocked values to remove disabled.
